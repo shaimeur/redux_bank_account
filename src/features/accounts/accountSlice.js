@@ -41,8 +41,21 @@ const initialStateAccount = {
     }
 
 }
-export function deposit(amount){
-    return {type : "account/deposit" ,payload : amount}
+export function deposit(amount,curency){
+
+   if(curency === "USD")  return {type : "account/deposit" ,payload : amount}
+
+   return async  function(dispatch,getState) {
+
+    const res = await fetch(`https://api.frankfurter.app/latest?${amount}&from=${curency}&to=USD`)
+    const data = await res.json()
+    // console.log(data.rates.USD)
+    // alert(`${amount} ${curency} is equal to ${amount * data.rates.USD} USD`)
+    const convertedAmount = amount * data.rates.USD
+    console.log(convertedAmount)
+    dispatch(  {type : "account/deposit" ,payload : convertedAmount})
+   }
+
 }
 
 
