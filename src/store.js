@@ -2,6 +2,7 @@ import {legacy_createStore as  createStore,combineReducers,applyMiddleware} from
 import { thunk } from 'redux-thunk';
 import accountReducer from './features/accounts/accountSlice';
 import customerReducer from './features/customers/customerSlice';
+import { composeWithDevTools } from '@redux-devtools/extension';
 
 
 
@@ -17,7 +18,7 @@ const rootReducer = combineReducers({
 
 
 
-const store = createStore(rootReducer,applyMiddleware(thunk))
+const store = createStore(rootReducer,composeWithDevTools(applyMiddleware(thunk)))
 
 
 
