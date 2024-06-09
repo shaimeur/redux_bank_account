@@ -1,5 +1,5 @@
 const initialStateCustomer = {
-    fullName: 'Haimeur saad',
+    fullName: '',
     nationalID: '',
     cretedAt: '',
 }

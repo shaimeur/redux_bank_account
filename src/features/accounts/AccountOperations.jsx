@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useDispatch ,useSelector} from "react-redux";
+import { deposit, withdraw ,requestLoan,payLoan} from "./accountSlice";
 
 function AccountOperations() {
   const [depositAmount, setDepositAmount] = useState("");
@@ -6,14 +8,35 @@ function AccountOperations() {
   const [loanAmount, setLoanAmount] = useState("");
   const [loanPurpose, setLoanPurpose] = useState("");
   const [currency, setCurrency] = useState("USD");
+  const dispatch = useDispatch();
+  const {balance,loan} = useSelector((state) => state.account)
 
-  function handleDeposit() {}
 
-  function handleWithdrawal() {}
+  function handleDeposit() {
+    if(!depositAmount ) return
+    if(depositAmount < 0 ) return setDepositAmount("")
+    dispatch(deposit(depositAmount));
+    setDepositAmount("");
+  }
 
-  function handleRequestLoan() {}
+  function handleWithdrawal() {
+    if(!withdrawalAmount ) return
+    if(withdrawalAmount < 0 ) return setWithdrawalAmount("")
+    dispatch(withdraw(withdrawalAmount));
+    setWithdrawalAmount("");
+  }
 
-  function handlePayLoan() {}
+  function handleRequestLoan() {
+    if(!loanAmount && !loanPurpose) return
+    if(loanAmount < 0 ) return setLoanAmount("")
+    dispatch(requestLoan(loanAmount,loanPurpose))
+    setLoanAmount("");
+    setLoanPurpose("");
+  }
+
+  function handlePayLoan() {
+    dispatch(payLoan())
+  }
 
   return (
     <div>
@@ -35,7 +58,7 @@ function AccountOperations() {
             <option value="GBP">British Pound</option>
           </select>
 
-          <button onClick={handleDeposit}>Deposit {depositAmount}</button>
+          <button onClick={handleDeposit}>Deposit </button>
         </div>
 
         <div>
@@ -46,7 +69,7 @@ function AccountOperations() {
             onChange={(e) => setWithdrawalAmount(+e.target.value)}
           />
           <button onClick={handleWithdrawal}>
-            Withdraw {withdrawalAmount}
+            Withdraw
           </button>
         </div>
 
@@ -67,8 +90,14 @@ function AccountOperations() {
         </div>
 
         <div>
-          <span>Pay back $X</span>
-          <button onClick={handlePayLoan}>Pay loan</button>
+          {
+            loan > 0 && (
+              <div>
+                <span>Pay back ${loan}</span>
+                <button onClick={handlePayLoan}>Pay loan</button>
+              </div>
+            )
+          }
         </div>
       </div>
     </div>
